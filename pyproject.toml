@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cv-generator"
+version = "0.1.0"
+description = "Generate polished PDF CVs from Markdown"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "Markdown>=3.5,<4",
+    "WeasyPrint>=62,<71",
+    "tinycss2>=1.2,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=25.11",
+    "coverage>=7.11.1",
+    "mypy>=1.17",
+    "ruff>=0.14",
+]
+
+[project.scripts]
+cv-generator = "cv_generator.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cv_generator*"]
+
+[tool.setuptools.package-data]
+cv_generator = ["styles/*.css"]
+
+[tool.black]
+line-length = 120
+target-version = ["py314"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.14"
+files = ["cv_generator"]
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["markdown", "markdown.*", "tinycss2", "weasyprint", "weasyprint.*"]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+branch = true
+source = ["cv_generator"]
+
+[tool.coverage.report]
+show_missing = true

@@ -1,0 +1,135 @@
+@page {
+    size: A4;
+    margin: 17mm 18mm 19mm;
+}
+
+:root {
+    color: #263238;
+    font-family: "DejaVu Sans", "Liberation Sans", sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.48;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 178mm;
+}
+
+.cv-page-break {
+    break-before: page;
+    page-break-before: always;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, p, ul, ol {
+    margin-top: 0;
+}
+
+h1 {
+    color: #142f3d;
+    font-size: 25pt;
+    letter-spacing: -0.6pt;
+    line-height: 1.12;
+    margin-bottom: 5pt;
+}
+
+h2 {
+    border-bottom: 1px solid #cbd6d9;
+    color: #176b72;
+    font-size: 13pt;
+    letter-spacing: 0.2pt;
+    margin: 19pt 0 8pt;
+    padding-bottom: 3pt;
+    break-after: avoid;
+}
+
+h3 {
+    color: #203e49;
+    font-size: 10.5pt;
+    margin: 11pt 0 3pt;
+    break-after: avoid;
+}
+
+p {
+    margin-bottom: 7pt;
+    orphans: 3;
+    widows: 3;
+}
+
+ul, ol {
+    margin-bottom: 8pt;
+    padding-left: 17pt;
+}
+
+li {
+    margin-bottom: 2.5pt;
+    padding-left: 1pt;
+    orphans: 2;
+    widows: 2;
+}
+
+a {
+    color: #176b72;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+strong {
+    color: #203e49;
+}
+
+blockquote {
+    border-left: 2px solid #8bb5b6;
+    color: #50636a;
+    margin: 8pt 0;
+    padding: 2pt 0 2pt 10pt;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d9e1e2;
+    margin: 12pt 0;
+}
+
+img {
+    max-height: 35mm;
+    max-width: 100%;
+}
+
+pre, table {
+    font-size: 8.5pt;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+table {
+    border-collapse: collapse;
+    margin-bottom: 9pt;
+    width: 100%;
+}
+
+th, td {
+    border-bottom: 1px solid #d9e1e2;
+    padding: 4pt 6pt;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    color: #203e49;
+}
+
+@media print {
+    a { color: inherit; }
+    h1, h2, h3 { break-after: avoid-page; }
+    img, table, blockquote, pre { break-inside: avoid; }
+}
