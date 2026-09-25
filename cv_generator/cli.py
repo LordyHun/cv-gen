@@ -27,10 +27,12 @@ PAGE_ORIGIN_ID = "cv-page-origin"
 
 class PageBreakPreprocessor(Preprocessor):
     def __init__(self, md: markdown.Markdown, extension: "PageBreakExtension") -> None:
+        """Keep the extension that collects page-break marker IDs."""
         super().__init__(md)
         self.extension = extension
 
     def run(self, lines: list[str]) -> list[str]:
+        """Replace standalone page-break comments with marker elements."""
         output = []
         for line in lines:
             if PAGEBREAK_PATTERN.fullmatch(line):
@@ -44,14 +46,17 @@ class PageBreakPreprocessor(Preprocessor):
 
 class PageBreakExtension(Extension):
     def __init__(self) -> None:
+        """Initialize storage for page-break marker IDs."""
         super().__init__()
         self.marker_ids: list[str] = []
 
     def extendMarkdown(self, md: markdown.Markdown) -> None:
+        """Register the page-break preprocessor with Markdown."""
         md.preprocessors.register(PageBreakPreprocessor(md, self), "cv_pagebreak", 35)
 
 
 def _page_break_warnings(document, marker_ids: list[str]) -> list[str]:
+    """Report markers that did not render at the top of a PDF page."""
     warnings = []
     for index, marker_id in enumerate(marker_ids, start=1):
         found = False
@@ -73,6 +78,7 @@ def _page_break_warnings(document, marker_ids: list[str]) -> list[str]:
 
 
 def _read_text(path: Path, description: str) -> str:
+    """Read UTF-8 text and convert file or decoding errors to InputError."""
     try:
         return path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
@@ -82,6 +88,7 @@ def _read_text(path: Path, description: str) -> str:
 
 
 def _check_css(path: Path) -> None:
+    """Parse a stylesheet and raise InputError when it contains syntax errors."""
     source = _read_text(path, "CSS file")
     rules = tinycss2.parse_stylesheet(source, skip_comments=True, skip_whitespace=True)
     errors = [token for token in rules if token.type == "error"]
@@ -137,6 +144,7 @@ def generate_pdf(markdown_path: Path, output_path: Path, css_path: Path | None =
 
 
 def _parser() -> argparse.ArgumentParser:
+    """Build the command-line parser and define supported arguments."""
     parser = argparse.ArgumentParser(
         prog="cv-generator",
         description="Generate a polished PDF CV from a Markdown file.",
@@ -153,6 +161,7 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    """Parse arguments, generate the PDF, and report errors or warnings."""
     args = _parser().parse_args()
     output = args.output or args.input.with_suffix(".pdf")
     try:

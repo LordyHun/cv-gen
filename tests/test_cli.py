@@ -13,6 +13,7 @@ EXAMPLE_CSS = ROOT / "examples" / "sample_cv.css"
 
 class GeneratePdfTests(unittest.TestCase):
     def test_generates_pdf_with_default_styles(self):
+        """Generate a readable PDF using the bundled stylesheet."""
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "cv.pdf"
             generate_pdf(EXAMPLE_MD, output)
@@ -22,6 +23,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertGreater(output.stat().st_size, 5_000)
 
     def test_generates_pdf_with_custom_cv_styles(self):
+        """Apply a custom stylesheet and create nested output directories."""
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "nested" / "styled.pdf"
             generate_pdf(EXAMPLE_MD, output, EXAMPLE_CSS)
@@ -30,6 +32,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertTrue(output.read_bytes().startswith(b"%PDF-"))
 
     def test_invalid_css_is_reported(self):
+        """Reject malformed CSS before writing the PDF."""
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
             css = temp / "broken.css"
@@ -42,6 +45,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertFalse(output.exists())
 
     def test_explicit_pagebreak_is_honored(self):
+        """Place content after a page-break marker at the next page boundary."""
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
             source = temp / "cv.md"
@@ -54,6 +58,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertEqual(warnings, [])
 
     def test_warns_when_css_overrides_explicit_pagebreak(self):
+        """Warn when custom CSS prevents a requested page break."""
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
             source = temp / "cv.md"
@@ -69,6 +74,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertIn("was not honored", warnings[0])
 
     def test_cli_uses_input_stem_for_default_output(self):
+        """Use the input filename with a PDF extension by default."""
         with tempfile.TemporaryDirectory() as temp_dir:
             source = Path(temp_dir) / "sample.md"
             source.write_text("# Sample CV\n\nHello.", encoding="utf-8")
@@ -84,6 +90,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertTrue((Path(temp_dir) / "sample.pdf").is_file())
 
     def test_cli_honors_explicit_output_path(self):
+        """Write the generated PDF to the path supplied on the command line."""
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
             source = temp / "sample.md"
@@ -108,6 +115,7 @@ class GeneratePdfTests(unittest.TestCase):
             self.assertTrue(output.is_file())
 
     def test_cli_reports_missing_input(self):
+        """Return an error and report a clear message for a missing input file."""
         with tempfile.TemporaryDirectory() as temp_dir:
             missing = Path(temp_dir) / "missing.md"
             result = subprocess.run(
